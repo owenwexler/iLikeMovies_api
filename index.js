@@ -7,6 +7,10 @@ const app = express();
 
 const corsAllowList = process.env.CORS_ALLOW_LIST.split(',');
 
+const sampleData = require('./data/sampleData.json');
+
+const cache = { ...sampleData } // we're getting it working with a simple temp cache before we involve REDIS
+
 const corsOptions = {
   origin: function (origin, callback) {
     if (corsAllowList.indexOf(origin) !== -1 || !origin) {
@@ -27,4 +31,5 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
-app.listen(process.env.PORT || 4000, () => console.log(`iLikeMovies API v${process.env.API_VERSION} API SERVER LISTENING IN ${process.env.NODE_ENV.toUpperCase()} MODE ON PORT ${process.env.PORT}`));
+
+app.listen(process.env.PORT || 4200, () => console.log(`iLikeMovies API v${process.env.API_VERSION} API SERVER LISTENING IN ${process.env.NODE_ENV.toUpperCase()} MODE ON PORT ${process.env.PORT}`));

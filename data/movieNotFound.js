@@ -24,6 +24,7 @@ const movieNotFound = {
   production: 'N/A',
   website: 'N/A',
   response: 'False',
+  watched: false
 }
 
 module.exports = {

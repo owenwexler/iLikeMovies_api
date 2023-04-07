@@ -23,7 +23,6 @@ const formatOMDBMovie = (args) => {
     movieData
   } = args;
 
-
   if (movieData.Response === 'False') {
     return {
       ...movieNotFound,
@@ -83,7 +82,8 @@ const formatOMDBMovie = (args) => {
       boxOffice: BoxOffice,
       production: Production,
       website: Website,
-      response: Response
+      response: Response,
+      watched: false
     }
   }
 };

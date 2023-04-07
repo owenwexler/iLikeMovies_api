@@ -1,7 +1,7 @@
 const { movieNotFound } = require("./movieNotFound");
 
  const expectedTestResult = {
-  // ... properly formatted OMDB response for your movie of choice
+  // ... properly formatted OMDB response for your movie of choice (see schema)
 };
 
 const expectedNotFoundTestResult = {

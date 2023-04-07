@@ -2,7 +2,7 @@ const { formatOMDBMovie } = require('../omdb/omdb');
 const sampleData = require('../data/sampleData.json');
 const { expectedTestResult, expectedNotFoundTestResult, testSampleDataKey, testTitle } = require('../data/testData');
 
-// no tests for getOMDBMovie needed - it's just an axios call to OMDB
+// no tests for getOMDBMovie needed - it's just an axios call to the OMDB API
 
 describe('formatOMDBMovie function', () => {
   test('function works as expected with an existent movie containing a True response field', () => {

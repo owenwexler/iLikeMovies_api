@@ -26,8 +26,19 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'))
     }
   },
-  methods: 'GET'
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
 }
+
+app.use(cors(corsOptions));
+
+const maxRequestsPerSecond = process.env.NODE_ENV === 'development' ? 30 : 15;
+
+const limiter = rateLimit({
+  windowMs: 1000,
+  max: maxRequestsPerSecond
+});
+
+app.use(limiter);
 
 // routes will stay in index.js until REDIS is involved
 app.get('/api/movies', (req, res) => {
@@ -92,15 +103,5 @@ app.delete('/api/deletemovie', (req, res) => {
     res.status(403).json({ error: '403 Forbidden' });
   }
 });
-
-app.use(cors(corsOptions));
-const maxRequestsPerSecond = process.env.NODE_ENV === 'development' ? 30 : 15;
-
-const limiter = rateLimit({
-  windowMs: 1000,
-  max: maxRequestsPerSecond
-});
-
-app.use(limiter);
 
 app.listen(process.env.PORT || 4200, () => console.log(`iLikeMovies API v${process.env.API_VERSION} API SERVER LISTENING IN ${process.env.NODE_ENV.toUpperCase()} MODE ON PORT ${process.env.PORT}`));

@@ -42,16 +42,22 @@ app.post('/api/movie', async (req, res) => {
   if (req.headers.apikey === process.env.ILM_API_KEY) {
     const inputMovie = req.query.movie;
 
-    const movieResponse = await getOMDBMovie(inputMovie);
+    // check if movie is in the cache already to avoid dupes and excess requests, return the cache if the movie is in the cache
+    if (cache[inputMovie.toLowerCase()]) {
+      res.status(200).json(cache)
+    } else { // otherwise get the movie from OMDB and add it
+      const movieResponse = await getOMDBMovie(inputMovie);
 
-    // uncomment this and comment the OMDB call to test and debug a sad path without hitting OMDB repeatedly
-    // const movieResponse = { Error: 'Movie Not Found!', Response: 'False' }
+      // uncomment this and comment the OMDB call to test and debug a sad path without hitting OMDB repeatedly
+      // const movieResponse = { Error: 'Movie Not Found!', Response: 'False' }
 
-    const movieData = formatOMDBMovie({ title: inputMovie, movieData: movieResponse });
-    const movieKey = inputMovie.toLowerCase();
-    cache[movieKey] = movieData;
-    cache.userMovieList.push(movieKey);
-    res.status(200).json(cache);
+      const movieData = formatOMDBMovie({ title: inputMovie, movieData: movieResponse });
+      const movieKey = inputMovie.toLowerCase();
+      cache[movieKey] = movieData;
+      cache.userMovieList.push(movieKey);
+      res.status(200).json(cache);
+    }
+
   } else {
     res.status(403).json({ error: '403 Forbidden' });
   }

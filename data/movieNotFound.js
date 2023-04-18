@@ -13,7 +13,7 @@ const movieNotFound = {
   country: 'No info available',
   awards: 'No info available',
   poster: 'No info available',
-  Ratings: [],
+  ratings: [],
   metascore: 'No info available',
   imdbRating: 'No info available',
   imdbVotes: 'No info available',

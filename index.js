@@ -8,6 +8,9 @@ const app = express();
 const corsAllowList = process.env.CORS_ALLOW_LIST.split(',');
 
 const sampleData = require('./data/sampleData.json');
+
+const { formatForLegacyFrontend } = require('./helper/formatForLegacyFrontend');
+
 const { getOMDBMovie, formatOMDBMovie } = require('./omdb/omdb');
 
 const cache = {}; // we're getting it working with a simple temp cache before we involve REDIS
@@ -43,7 +46,7 @@ app.use(limiter);
 // routes will stay in index.js until REDIS is involved
 app.get('/api/movies', (req, res) => {
   if (req.headers.apikey === process.env.ILM_API_KEY) { // if "|| undefined" is still in this condition GET IT OUT before going to production.  SERIOUS SECURITY ISSUE.  FOR DEVELOPEMENT ONLY.
-    res.status(200).json(cache);
+    res.status(200).json(formatForLegacyFrontend(cache));
   } else {
     res.status(403).json({ error: '403 Forbidden' });
   }
@@ -66,7 +69,7 @@ app.post('/api/movie', async (req, res) => {
       const movieKey = inputMovie.toLowerCase();
       cache[movieKey] = movieData;
       cache.userMovieList.push(movieKey);
-      res.status(200).json(cache);
+      res.status(200).json(formatForLegacyFrontend(cache))
     }
 
   } else {
@@ -79,7 +82,7 @@ app.put('/api/togglemoviewatched', (req, res) => {
     const inputMovie = req.query.movie.toLowerCase();
     if (cache[inputMovie]) {
       cache[inputMovie].watched = !cache[inputMovie].watched;
-      res.status(200).json(cache);
+      res.status(200).json(formatForLegacyFrontend(cache));
     } else {
       res.status(404).json({ error: 'Movie not found in current user collection' })
     }
@@ -95,7 +98,7 @@ app.delete('/api/deletemovie', (req, res) => {
       delete cache[inputMovie];
       const newUserMovieList = cache.userMovieList.filter(movie => movie !== inputMovie);
       cache.userMovieList = newUserMovieList;
-      res.status(200).json(cache);
+      res.status(200).json(formatForLegacyFrontend(cache));
     } else {
       res.status(404).json({ error: 'Movie not found in current user collection' })
     }

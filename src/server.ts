@@ -1,40 +1,41 @@
-require('dotenv').config();
+import 'dotenv/config';
 
-const express = require('express');
-const cors = require('cors');
-const rateLimit = require('express-rate-limit');
-const app = express();
+import express, {Express, Request, Response} from 'express';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit'
 
-const corsAllowList = process.env.CORS_ALLOW_LIST.split(',');
+import { formatForLegacyFrontend } from './helper/formatForLegacyFrontend';
 
-const sampleData = require('./data/sampleData.json');
+import { getOMDBMovie, formatOMDBMovie } from './omdb/omdb';
 
-const { formatForLegacyFrontend } = require('./helper/formatForLegacyFrontend');
+import type { MovieCache } from './interfaces/MovieCache';
 
-const { getOMDBMovie, formatOMDBMovie } = require('./omdb/omdb');
+import sampleData from './data/sampleData.json';
 
-const cache = {}; // we're getting it working with a simple temp cache before we involve REDIS
+const app: Express = express();
 
-for (let key in sampleData) {
+const nodeEnv = process.env.NODE_ENV && process.env.NODE_ENV !== '' ? process.env.NODE_ENV as string : 'unknown';
+
+const corsAllowListPSV = process.env.CORS_ALLOW_LIST as string;
+const corsAllowList: string[] = corsAllowListPSV.split(',');
+
+const port = process.env.PORT ? Number(process.env.PORT) : 4000;
+
+const cache: MovieCache = {}; // we're getting it working with a simple temp cache before we involve REDIS
+
+for (const key in sampleData) {
   cache[key] = formatOMDBMovie({ title: sampleData[key]['Title'], movieData: sampleData[key] })
 }
 
-cache.userMovieList = Object.keys(sampleData);
+const userMovieList = Object.keys(sampleData);
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (corsAllowList.indexOf(origin) !== -1 || !origin) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-}
+const corsOptions: cors.CorsOptions = {
+  origin: corsAllowList
+};
 
 app.use(cors(corsOptions));
 
-const maxRequestsPerSecond = process.env.NODE_ENV === 'development' ? 30 : 15;
+const maxRequestsPerSecond: number = process.env.NODE_ENV === 'development' ? 30 : 15;
 
 const limiter = rateLimit({
   windowMs: 1000,
@@ -107,4 +108,4 @@ app.delete('/api/deletemovie', (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 4200, () => console.log(`iLikeMovies API v${process.env.API_VERSION} API SERVER LISTENING IN ${process.env.NODE_ENV.toUpperCase()} MODE ON PORT ${process.env.PORT}`));
+app.listen(process.env.PORT || 4200, () => console.log(`iLikeMovies API v${process.env.API_VERSION} API SERVER LISTENING IN ${nodeEnv.toUpperCase()} MODE ON PORT ${process.env.PORT}`));

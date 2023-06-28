@@ -105,4 +105,4 @@ dist
 
 # sample data
 sampleData.json
-testData.js
+testData.ts

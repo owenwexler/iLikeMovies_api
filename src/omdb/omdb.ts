@@ -1,27 +1,42 @@
-const axios = require('axios');
+import axios from 'axios';
 
-const { movieNotFound } = require('../data/movieNotFound');
+import { movieNotFound } from '../data/movieNotFound';
+import { OMDBMovieResponse } from '../interfaces/OMDBMovieResponse';
+import { Movie } from '../interfaces/Movie';
+import { OMDBRatingResponse } from '../interfaces/OMDBRatingResponse';
+import { Rating } from '../interfaces/Rating';
+import { OMDBError } from '../interfaces/OMDBError';
+import { NetworkError } from '../interfaces/NetworkError';
+import { blankOMDBResponse } from '../data/blankOMDBResponse';
 
-const formatRatingsInOMDBResponse = (ratings) => {
+const formatRatingsInOMDBResponse = (ratings: OMDBRatingResponse[]): Rating[] => {
   return ratings.map(rating => {
     return { source: rating.Source, value: rating.Value }
   });
 }
 
-const getOMDBMovie = async (movie) => {
+const getOMDBMovie = async (movieTitle: string): Promise<OMDBMovieResponse | NetworkError> => {
   try {
-    const result = await axios(`http://www.omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&t=${movie.toLowerCase()}&r=json&plot=short`);
+    const result = await axios(`http://www.omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&t=${movieTitle.toLowerCase()}&r=json&plot=short`);
     return result.data;
   } catch (error) {
-    return { error: error }
+    const err: string = error ? error.toString() : '';
+    return { error: err }
   }
 };
 
-const formatOMDBMovie = (args) => {
+interface FormatOMDBMovieArgs {
+  title: string;
+  movieData: OMDBMovieResponse | OMDBError;
+}
+
+const formatOMDBMovie = (args: FormatOMDBMovieArgs): Movie => {
   const {
     title,
     movieData
   } = args;
+
+  const typedMovieResponse = movieData.Response === 'True' ? movieData as OMDBMovieResponse : blankOMDBResponse;
 
   if (movieData.Response === 'False') {
     return {
@@ -55,9 +70,10 @@ const formatOMDBMovie = (args) => {
       Production,
       Website,
       Response
-    } = movieData;
+    } = typedMovieResponse;
 
     return {
+      id: '',
       title: Title,
       year: Year,
       rated: Rated,
@@ -88,7 +104,7 @@ const formatOMDBMovie = (args) => {
   }
 };
 
-module.exports = {
+export {
   getOMDBMovie,
   formatOMDBMovie
 };

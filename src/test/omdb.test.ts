@@ -1,6 +1,6 @@
-const { formatOMDBMovie } = require('../omdb/omdb');
-const sampleData = require('../data/sampleData.json');
-const { expectedTestResult, expectedNotFoundTestResult, testSampleDataKey, testTitle } = require('../data/testData');
+import { formatOMDBMovie } from '../omdb/omdb';
+import sampleData from '../data/sampleData.json';
+import { expectedTestResult, expectedNotFoundTestResult, testSampleDataKey, testTitle } from '../data/testData';
 
 // no tests for getOMDBMovie needed - it's just an axios call to the OMDB API
 

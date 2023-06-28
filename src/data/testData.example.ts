@@ -1,4 +1,4 @@
-const { movieNotFound } = require("./movieNotFound");
+import { movieNotFound } from './movieNotFound';
 
  const expectedTestResult = {
   // ... properly formatted OMDB response for your movie of choice (see schema)
@@ -6,6 +6,7 @@ const { movieNotFound } = require("./movieNotFound");
 
 const expectedNotFoundTestResult = {
   ...movieNotFound,
+  id: '',
   title: 'This Movie Does Not Exist'
 }
 

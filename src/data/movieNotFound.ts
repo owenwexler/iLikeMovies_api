@@ -1,4 +1,7 @@
-const movieNotFound = {
+import type { Movie } from "../interfaces/Movie"
+
+const movieNotFound: Movie = {
+  id: '',
   title: 'title',
   year: 'Unknown',
   rated: 'No rating info available',
@@ -27,6 +30,6 @@ const movieNotFound = {
   watched: false
 }
 
-module.exports = {
+export {
   movieNotFound
 }

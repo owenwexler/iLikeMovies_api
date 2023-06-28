@@ -1,7 +1,7 @@
-import type { OMDBMovieResponse } from "./OMDBMovieResponse";
+import { Movie } from "./Movie";
 
 interface MovieCache {
-  [key: string]: OMDBMovieResponse;
+  [key: string]: Movie;
 }
 
 export type {

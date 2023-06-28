@@ -1,7 +1,6 @@
 import { Rating } from "./Rating";
 
 interface Movie {
-  id: string;
   title: string;
   year: string;
   rated: string;

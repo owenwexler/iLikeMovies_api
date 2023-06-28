@@ -1,7 +1,6 @@
 import type { Movie } from "../interfaces/Movie"
 
 const movieNotFound: Movie = {
-  id: '',
   title: 'title',
   year: 'Unknown',
   rated: 'No rating info available',

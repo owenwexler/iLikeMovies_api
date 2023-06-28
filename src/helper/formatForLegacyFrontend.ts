@@ -1,5 +1,7 @@
-const formatForLegacyFrontend = (data) => {
-  return data.userMovieList.map(movie => data[movie]);
+import { MovieCache } from "../interfaces/MovieCache";
+
+const formatForLegacyFrontend = (cache: MovieCache, userMovieList: string[]) => {
+  return userMovieList.map(movie => cache[movie]);
 }
 
 export {

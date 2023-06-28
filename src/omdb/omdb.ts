@@ -73,7 +73,6 @@ const formatOMDBMovie = (args: FormatOMDBMovieArgs): Movie => {
     } = typedMovieResponse;
 
     return {
-      id: '',
       title: Title,
       year: Year,
       rated: Rated,

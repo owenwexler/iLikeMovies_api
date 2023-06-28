@@ -6,7 +6,6 @@ import { movieNotFound } from './movieNotFound';
 
 const expectedNotFoundTestResult = {
   ...movieNotFound,
-  id: '',
   title: 'This Movie Does Not Exist'
 }
 

@@ -23,7 +23,7 @@ const blankOMDBResponse = {
   BoxOffice: '',
   Production: '',
   Website: '',
-  Response: ''
+  Response: 'False'
 }
 
 export {
